@@ -737,7 +737,7 @@ elif menu == "🔧 质量工具":
         fig = go.Figure()
         colors = ['#fc8181' if (v > ucl or v < lcl) else '#63b3ed' for v in data]
         
-        fig.add_trace(go.Scatter(x=list(range(1, n_points+1)), y=data, mode='lines+markers',
+        fig.add_trace(go.Scatter(x=list(range(1, n_points+1)), y=data.tolist(), mode='lines+markers',
                                  name='测量值', line=dict(color='#63b3ed', width=1.5),
                                  marker=dict(color=colors, size=8)))
         fig.add_hline(y=ucl, line=dict(color='#fc8181', dash='dash', width=2), annotation_text=f"UCL={ucl:.2f}")
@@ -797,14 +797,16 @@ elif menu == "📐 六西格玛":
         y = (1/(np.sqrt(2*np.pi))) * np.exp(-0.5*x**2)
         
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=x, y=y, fill='tozeroy', fillcolor='rgba(99,179,237,0.1)',
+        fig.add_trace(go.Scatter(x=x.tolist(), y=y.tolist(), fill='tozeroy', fillcolor='rgba(99,179,237,0.1)',
                                  line=dict(color='#63b3ed', width=2), name='正态分布'))
         
-        sigma_regions = [(3, '#fc8181'), (2, '#ed8936'), (1, '#48bb78')]
-        for s, c in sigma_regions:
+        sigma_regions = [(3, '#fc8181', 'rgba(252,129,129,0.2)'), (2, '#ed8936', 'rgba(237,137,54,0.2)'), (1, '#48bb78', 'rgba(72,187,120,0.2)')]
+        for s, c, fc in sigma_regions:
             mask = (x >= -s) & (x <= s)
-            fig.add_trace(go.Scatter(x=x[mask], y=y[mask], fill='tozeroy',
-                                     fillcolor=c+'33', line=dict(width=0), name=f'±{s}σ', showlegend=True))
+            x_masked = x[mask].tolist()
+            y_masked = y[mask].tolist()
+            fig.add_trace(go.Scatter(x=x_masked, y=y_masked, fill='tozeroy',
+                                     fillcolor=fc, line=dict(width=0), name=f'±{s}σ', showlegend=True))
         
         for s in [-3, -2, -1, 1, 2, 3]:
             fig.add_vline(x=s, line=dict(color='rgba(255,255,255,0.3)', dash='dot'), annotation_text=f"{s}σ")
@@ -877,7 +879,7 @@ elif menu == "📐 六西格玛":
         y = (1/(std_val * np.sqrt(2*np.pi))) * np.exp(-0.5*((x-mean_val)/std_val)**2)
         
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=x, y=y, fill='tozeroy', fillcolor='rgba(99,179,237,0.2)',
+        fig.add_trace(go.Scatter(x=x.tolist(), y=y.tolist(), fill='tozeroy', fillcolor='rgba(99,179,237,0.2)',
                                  line=dict(color='#63b3ed', width=2), name='过程分布'))
         fig.add_vline(x=lsl, line=dict(color='#fc8181', width=2), annotation_text=f"LSL={lsl}")
         fig.add_vline(x=usl, line=dict(color='#fc8181', width=2), annotation_text=f"USL={usl}")
