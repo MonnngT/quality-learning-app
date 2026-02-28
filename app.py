@@ -685,11 +685,15 @@ elif menu == "📋 质量体系":
     st.markdown("<div class='section-title'>PDCA 循环</div>", unsafe_allow_html=True)
     
     fig = go.Figure()
-    phases = [("Plan\n计划", "#63b3ed", 0.25, 0.75), ("Do\n执行", "#48bb78", 0.75, 0.75), 
-               ("Check\n检查", "#ed8936", 0.75, 0.25), ("Act\n行动", "#a855f7", 0.25, 0.25)]
-    for label, color, x, y in phases:
-        fig.add_shape(type="circle", x0=x-0.18, y0=y-0.18, x1=x+0.18, y1=y+0.18,
-                      fillcolor=color+'44', line=dict(color=color, width=2))
+    pdca_data = [
+        ('Plan<br>计划',  '#63b3ed', 'rgba(99,179,237,0.27)',  0.25, 0.75),
+        ('Do<br>执行',   '#48bb78', 'rgba(72,187,120,0.27)',  0.75, 0.75),
+        ('Check<br>检查','#ed8936', 'rgba(237,137,54,0.27)',  0.75, 0.25),
+        ('Act<br>行动',  '#a855f7', 'rgba(168,85,247,0.27)',  0.25, 0.25),
+    ]
+    for label, color, fillc, x, y in pdca_data:
+        fig.add_shape(type='circle', x0=x-0.18, y0=y-0.18, x1=x+0.18, y1=y+0.18,
+                      fillcolor=fillc, line=dict(color=color, width=2))
         fig.add_annotation(x=x, y=y, text=f"<b>{label}</b>", showarrow=False,
                            font=dict(color='white', size=14), align='center')
     
@@ -829,9 +833,10 @@ elif menu == "📐 六西格玛":
         colors_hex = [phases[p]['color'] for p in phase_names]
         
         fig = go.Figure()
+        dmaic_fillcolors = ["rgba(99,179,237,0.27)", "rgba(72,187,120,0.27)", "rgba(237,137,54,0.27)", "rgba(168,85,247,0.27)", "rgba(246,224,94,0.27)"]
         for i, (phase, color) in enumerate(zip(phase_names, colors_hex)):
             fig.add_shape(type="rect", x0=i*1.2, y0=0, x1=i*1.2+1, y1=0.8,
-                          fillcolor=color+'44', line=dict(color=color, width=2))
+                          fillcolor=dmaic_fillcolors[i], line=dict(color=color, width=2))
             fig.add_annotation(x=i*1.2+0.5, y=0.4, text=f"<b>{phase[0]}</b><br>{phase[4:]}",
                                 showarrow=False, font=dict(color='white', size=13), align='center')
             if i < 4:
